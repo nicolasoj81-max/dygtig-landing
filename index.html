@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dygtig — Stop AI agents from burning your budget</title>
 <meta name="description" content="Dygtig sits between your agents and Claude or OpenAI, meters every dollar in real time, and locks an agent out the moment it hits its limit.">
+<link rel="icon" type="image/x-icon" href="branding/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="branding/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="branding/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="branding/favicon-180.png">
 <style>
   :root {
     --bg: #101114;
@@ -59,12 +63,12 @@
     padding: 16px 24px;
   }
   .logo {
-    font-weight: 700;
-    font-size: 17px;
-    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
     text-decoration: none;
+    line-height: 0;
   }
-  .logo .dot { color: var(--green); }
+  .logo svg { height: 24px; width: auto; display: block; }
   .nav-links {
     display: flex;
     gap: 28px;
@@ -576,7 +580,14 @@
 
 <header class="nav">
   <div class="nav-inner">
-    <a href="#top" class="logo">dygtig<span class="dot">.</span></a>
+    <a href="#top" class="logo" aria-label="Dygtig">
+      <svg viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g transform="translate(0,8) scale(0.5)">
+          <path d="M 32,12 A 20,20 0 1 1 13.21,25.16" fill="none" stroke="#6ee7a8" stroke-width="11" stroke-linecap="round"/>
+        </g>
+        <text x="42" y="28" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif" font-size="24" font-weight="800" letter-spacing="-0.5" fill="#f2f3f5">dygtig</text>
+      </svg>
+    </a>
     <nav class="nav-links">
       <a href="#how-it-works">How it works</a>
       <a href="#features">Features</a>
