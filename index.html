@@ -14,6 +14,7 @@
     --text-muted: #9096a2;
     --green: #16a34a;
     --green-bright: #6ee7a8;
+    --green-glow: rgba(110, 231, 168, 0.35);
     --red: #dc2626;
     --red-bright: #fca5a5;
     --amber: #f59e0b;
@@ -30,6 +31,7 @@
     color: var(--text);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   a { color: inherit; }
@@ -38,6 +40,7 @@
     max-width: 1080px;
     margin: 0 auto;
     padding: 0 24px;
+    position: relative;
   }
 
   /* Nav */
@@ -68,7 +71,7 @@
     font-size: 13.5px;
     color: var(--text-muted);
   }
-  .nav-links a { text-decoration: none; }
+  .nav-links a { text-decoration: none; transition: color 0.15s ease; }
   .nav-links a:hover { color: var(--text); }
 
   /* Buttons */
@@ -81,17 +84,51 @@
     text-decoration: none;
     cursor: pointer;
     border: none;
-    transition: opacity 0.15s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    will-change: transform;
   }
-  .btn:hover { opacity: 0.88; }
-  .btn-primary { background: var(--green); color: #04150a; }
+  .btn:hover { transform: translateY(-2px) scale(1.015); }
+  .btn-primary { background: var(--green); color: #04150a; box-shadow: 0 0 0 0 var(--green-glow); }
+  .btn-primary:hover { box-shadow: 0 10px 30px -6px var(--green-glow), 0 0 0 1px rgba(110, 231, 168, 0.25); }
   .btn-nav { background: var(--text); color: #101114; padding: 8px 16px; font-size: 13px; }
+  .btn-nav:hover { box-shadow: 0 8px 20px -6px rgba(242, 243, 245, 0.35); }
 
   /* Hero */
   section.hero {
     padding: 96px 24px 88px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
   }
+  .hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 900px;
+    height: 900px;
+    transform: translate(-50%, -55%);
+    background: radial-gradient(circle at center, rgba(22, 163, 74, 0.28) 0%, rgba(22, 163, 74, 0.10) 32%, rgba(16, 17, 20, 0) 68%);
+    filter: blur(10px);
+    pointer-events: none;
+    z-index: 0;
+    animation: glow-drift 14s ease-in-out infinite alternate;
+  }
+  @keyframes glow-drift {
+    0%   { transform: translate(-54%, -58%) scale(0.94); opacity: 0.75; }
+    50%  { transform: translate(-46%, -52%) scale(1.05); opacity: 1; }
+    100% { transform: translate(-50%, -60%) scale(0.98); opacity: 0.85; }
+  }
+  .hero-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(242, 243, 245, 0.05) 1px, transparent 1px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 30%, #000 0%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  section.hero .wrap { z-index: 1; }
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -105,11 +142,28 @@
     border: 1px solid rgba(22, 163, 74, 0.28);
     border-radius: 999px;
     padding: 6px 14px;
-    margin-bottom: 28px;
+    margin-bottom: 22px;
   }
   .eyebrow .pulse {
     width: 6px; height: 6px; border-radius: 50%;
     background: var(--green-bright);
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(110, 231, 168, 0.55); }
+    50% { box-shadow: 0 0 0 6px rgba(110, 231, 168, 0); }
+  }
+  .tagline-badge {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin: 0 auto 26px;
+    max-width: 480px;
+    letter-spacing: 0.01em;
+  }
+  .tagline-badge em {
+    color: var(--green-bright);
+    font-style: normal;
+    font-weight: 600;
   }
   h1 {
     font-size: 52px;
@@ -151,6 +205,27 @@
     margin: 14px auto 0;
   }
 
+  /* Scroll-reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .stat-grid > .reveal:nth-child(2), .steps > .reveal:nth-child(2), .feature-grid > .reveal:nth-child(2) { transition-delay: 0.08s; }
+  .stat-grid > .reveal:nth-child(3), .steps > .reveal:nth-child(3), .feature-grid > .reveal:nth-child(3) { transition-delay: 0.16s; }
+  .feature-grid > .reveal:nth-child(4) { transition-delay: 0.24s; }
+  .feature-grid > .reveal:nth-child(5) { transition-delay: 0.32s; }
+  .feature-grid > .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+
   /* Problem stats */
   .stat-grid {
     display: grid;
@@ -162,6 +237,12 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 28px 24px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(220, 38, 38, 0.35);
+    box-shadow: 0 16px 34px -18px rgba(220, 38, 38, 0.45);
   }
   .stat-card .amount {
     font-size: 30px;
@@ -191,6 +272,12 @@
     border-radius: 14px;
     padding: 28px 24px;
     position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .step:hover {
+    transform: translateY(-4px);
+    border-color: rgba(110, 231, 168, 0.3);
+    box-shadow: 0 16px 34px -18px var(--green-glow);
   }
   .step-num {
     width: 30px; height: 30px;
@@ -217,6 +304,10 @@
     background: rgba(220, 38, 38, 0.14);
     color: var(--red-bright);
     border-color: rgba(220, 38, 38, 0.3);
+  }
+  .step.blocked:hover {
+    border-color: rgba(220, 38, 38, 0.35);
+    box-shadow: 0 16px 34px -18px rgba(220, 38, 38, 0.45);
   }
 
   /* Differentiator */
@@ -254,6 +345,12 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 24px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .feature:hover {
+    transform: translateY(-4px);
+    border-color: rgba(110, 231, 168, 0.3);
+    box-shadow: 0 16px 34px -18px var(--green-glow);
   }
   .feature-icon {
     width: 34px; height: 34px;
@@ -262,6 +359,11 @@
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 14px;
     color: var(--green-bright);
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .feature:hover .feature-icon {
+    background: rgba(110, 231, 168, 0.14);
+    transform: scale(1.08);
   }
   .feature h3 {
     font-size: 15px;
@@ -273,6 +375,92 @@
     color: var(--text-muted);
     font-size: 13.5px;
     line-height: 1.5;
+  }
+
+  /* Live demo chart */
+  .chart-card {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 28px 20px;
+    max-width: 820px;
+    margin: 0 auto;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .chart-card:hover {
+    border-color: rgba(110, 231, 168, 0.3);
+    box-shadow: 0 20px 40px -22px var(--green-glow);
+  }
+  .chart-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .chart-title { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  .chart-sub { font-size: 13px; color: var(--text-muted); margin: 0; }
+  .chart-demo-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--amber);
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 999px;
+    padding: 5px 11px;
+    white-space: nowrap;
+  }
+  .chart-svg-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .chart-svg-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart-line {
+    fill: none;
+    stroke: var(--green-bright);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(110, 231, 168, 0.65)) drop-shadow(0 0 14px rgba(110, 231, 168, 0.28));
+  }
+  .chart-area { fill: url(#chart-fill); opacity: 0.9; }
+  .chart-cap-line { stroke: rgba(252, 165, 165, 0.55); stroke-width: 1; stroke-dasharray: 4 4; }
+  .chart-cap-label { fill: var(--red-bright); font-size: 10.5px; font-family: inherit; }
+  .chart-lockout-line { stroke: rgba(252, 165, 165, 0.5); stroke-width: 1; stroke-dasharray: 3 3; }
+  .chart-lockout-dot { fill: var(--red-bright); stroke: var(--bg-raised); stroke-width: 2; }
+  .chart-lockout-label { fill: var(--red-bright); font-size: 10.5px; font-weight: 600; font-family: inherit; }
+  .chart-axis-label { fill: var(--text-muted); font-size: 10px; font-family: inherit; }
+  .chart-guide { stroke: rgba(242, 243, 245, 0.18); stroke-width: 1; opacity: 0; transition: opacity 0.1s ease; }
+  .chart-hover-dot { fill: var(--green-bright); stroke: var(--bg-raised); stroke-width: 2; opacity: 0; transition: opacity 0.1s ease; }
+  .chart-hit-area { fill: transparent; cursor: crosshair; }
+  .chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: #0c0d0f;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--text);
+    box-shadow: 0 10px 24px -10px rgba(0,0,0,0.6);
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 12px));
+    transition: opacity 0.1s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .chart-tooltip .tt-date { color: var(--text-muted); font-size: 11px; margin-bottom: 2px; }
+  .chart-tooltip .tt-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .chart-tooltip .tt-flag { color: var(--red-bright); font-weight: 600; margin-top: 2px; }
+  .chart-caption {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 16px 0 0;
   }
 
   /* Trust */
@@ -305,6 +493,12 @@
     border: 1px solid rgba(22, 163, 74, 0.25);
     border-radius: 999px;
     padding: 7px 14px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .trust-badge:hover {
+    transform: translateY(-2px);
+    border-color: rgba(110, 231, 168, 0.5);
+    background: rgba(22, 163, 74, 0.18);
   }
 
   /* Final CTA */
@@ -331,6 +525,7 @@
     text-decoration: none;
     font-size: 14px;
     color: var(--text-muted);
+    transition: color 0.15s ease;
   }
   .footer-inner a:hover { color: var(--text); }
   .beta-note {
@@ -350,6 +545,8 @@
     .callout { padding: 26px 24px; }
     .callout p { font-size: 17px; }
     .footer-inner { flex-direction: column; align-items: flex-start; }
+    .chart-card { padding: 22px 16px 16px; }
+    .tagline-badge { font-size: 12.5px; padding: 0 8px; }
   }
 </style>
 </head>
@@ -370,8 +567,11 @@
 <main id="top">
 
   <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-dots"></div>
     <div class="wrap">
       <span class="eyebrow"><span class="pulse"></span>Private beta</span>
+      <div class="tagline-badge">Dygtig — Danish for <em>clever</em>. Built to be smarter than your agent's next runaway loop.</div>
       <h1>Stop AI agents from burning your budget</h1>
       <p class="sub">Dygtig sits between your agents and <strong>Claude or OpenAI</strong>, meters every dollar in real time, and locks an agent out the moment it hits its limit — before the money's gone, not after.</p>
       <a class="btn btn-primary" href="mailto:nicolasoj81@gmail.com?subject=Dygtig%20Access%20Request&body=Hi%2C%20I%27d%20like%20to%20try%20Dygtig.%20A%20bit%20about%20what%20I%27m%20running%3A">Request Access</a>
@@ -380,22 +580,22 @@
 
   <section id="problem">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head reveal">
         <div class="section-label">The problem</div>
         <h2>Agent spend doesn't fail gracefully</h2>
         <p class="section-desc">By the time the bill arrives, the damage is already done.</p>
       </div>
       <div class="stat-grid">
-        <div class="stat-card">
-          <div class="amount">$1,500/mo cap</div>
+        <div class="stat-card reveal">
+          <div class="amount"><span class="counter" data-target="1500" data-prefix="$" data-suffix="/mo cap">0</span></div>
           <p>Uber capped engineers at $1,500/month after burning their entire 2026 AI budget in 4 months.</p>
         </div>
-        <div class="stat-card">
-          <div class="amount">$1,847</div>
+        <div class="stat-card reveal">
+          <div class="amount"><span class="counter" data-target="1847" data-prefix="$">0</span></div>
           <p>One uncapped loop cost a developer $1,847 in a single night.</p>
         </div>
-        <div class="stat-card">
-          <div class="amount">$87,000</div>
+        <div class="stat-card reveal">
+          <div class="amount"><span class="counter" data-target="87000" data-prefix="$">0</span></div>
           <p>A 35-engineer company got an $87,000 bill with no way to trace which agent caused it.</p>
         </div>
       </div>
@@ -404,22 +604,22 @@
 
   <section id="how-it-works">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head reveal">
         <div class="section-label">How it works</div>
         <h2>In the request path, not the invoice</h2>
       </div>
       <div class="steps">
-        <div class="step">
+        <div class="step reveal">
           <div class="step-num">1</div>
           <h3>Your agent calls out as normal</h3>
           <p>Your agent calls Claude or OpenAI exactly the way it already does — no code changes to how it prompts or parses responses.</p>
         </div>
-        <div class="step">
+        <div class="step reveal">
           <div class="step-num">2</div>
           <h3>Dygtig meters and checks</h3>
           <p>Dygtig sits in the request path, meters the call, and checks it against the agent's budget before it's allowed through.</p>
         </div>
-        <div class="step blocked">
+        <div class="step blocked reveal">
           <div class="step-num">3</div>
           <h3>Under budget goes through. Over budget doesn't.</h3>
           <p>Under budget: the request goes through untouched. Over budget: it's blocked — before any money is spent.</p>
@@ -430,7 +630,7 @@
 
   <section id="differentiator">
     <div class="wrap">
-      <div class="callout">
+      <div class="callout reveal">
         <p><span class="before">Most tools tell you what happened after the invoice arrives.</span> <span class="after">Dygtig sits in the actual request path, so it can say no before the call happens.</span></p>
       </div>
     </div>
@@ -438,37 +638,37 @@
 
   <section id="features">
     <div class="wrap">
-      <div class="section-head">
+      <div class="section-head reveal">
         <div class="section-label">Features</div>
         <h2>Built for teams running agents unattended</h2>
       </div>
       <div class="feature-grid">
-        <div class="feature">
+        <div class="feature reveal">
           <div class="feature-icon">◐</div>
           <h3>Real-time metering, per agent</h3>
           <p>Every call is metered as it happens, broken down by the agent that made it.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal">
           <div class="feature-icon">▤</div>
           <h3>Independent daily and monthly budgets</h3>
           <p>Set separate caps for daily and monthly spend so one bad day doesn't blow the whole month.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal">
           <div class="feature-icon">⛔</div>
           <h3>Automatic lockout at the limit</h3>
           <p>No manual intervention needed — an agent is cut off the instant it hits its budget.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal">
           <div class="feature-icon">⇄</div>
           <h3>Works with Claude and OpenAI</h3>
           <p>One proxy in front of both providers, with the same budget rules either way.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal">
           <div class="feature-icon">⌂</div>
           <h3>Runs on your own infrastructure</h3>
           <p>Self-hosted by design — your traffic never leaves your machine.</p>
         </div>
-        <div class="feature">
+        <div class="feature reveal">
           <div class="feature-icon">✉</div>
           <h3>Email alerts at 80% and 100%</h3>
           <p>Get warned before the lockout, and confirmation the moment it happens.</p>
@@ -477,9 +677,48 @@
     </div>
   </section>
 
+  <section id="live-demo">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div class="section-label">Live demo</div>
+        <h2>What your dashboard looks like</h2>
+        <p class="section-desc">Hover the line to see a day's spend. This is an example dashboard with synthetic data, not an aggregate of real customer spend.</p>
+      </div>
+      <div class="chart-card reveal">
+        <div class="chart-head">
+          <div>
+            <p class="chart-title">Daily spend — 3 agents</p>
+            <p class="chart-sub">Last 21 days · combined across agent-scout, agent-writer, agent-deploy</p>
+          </div>
+          <span class="chart-demo-tag">Example dashboard</span>
+        </div>
+        <div class="chart-svg-wrap" id="chart-wrap">
+          <svg id="chart-svg" viewBox="0 0 720 260" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(110,231,168,0.32)" />
+                <stop offset="100%" stop-color="rgba(110,231,168,0)" />
+              </linearGradient>
+            </defs>
+            <g id="chart-static"></g>
+            <line class="chart-guide" id="chart-guide-v" x1="0" y1="20" x2="0" y2="212"></line>
+            <circle class="chart-hover-dot" id="chart-hover-dot" r="4.5"></circle>
+            <rect class="chart-hit-area" id="chart-hit-area" x="0" y="0" width="720" height="260"></rect>
+          </svg>
+          <div class="chart-tooltip" id="chart-tooltip">
+            <div class="tt-date" id="tt-date">Day 1</div>
+            <div class="tt-value" id="tt-value">$0</div>
+            <div class="tt-flag" id="tt-flag" style="display:none;">⛔ Agent locked out</div>
+          </div>
+        </div>
+        <p class="chart-caption">Synthetic example data for illustration purposes only.</p>
+      </div>
+    </div>
+  </section>
+
   <section id="trust">
     <div class="wrap trust">
-      <div class="trust-card">
+      <div class="trust-card reveal">
         <div class="section-label">Trust</div>
         <p><strong>Your API key stays yours.</strong> Your traffic goes straight to Anthropic or OpenAI, exactly as it would without Dygtig in the middle. Only metadata — tokens, cost, agent name — is ever recorded.</p>
         <div class="trust-badges">
@@ -493,9 +732,9 @@
 
   <section class="final-cta">
     <div class="wrap">
-      <h2>Know before it happens, not after</h2>
-      <p class="section-desc">Currently in private beta with a limited number of teams.</p>
-      <a class="btn btn-primary" href="mailto:nicolasoj81@gmail.com?subject=Dygtig%20Access%20Request&body=Hi%2C%20I%27d%20like%20to%20try%20Dygtig.%20A%20bit%20about%20what%20I%27m%20running%3A">Request Access</a>
+      <h2 class="reveal">Know before it happens, not after</h2>
+      <p class="section-desc reveal">Currently in private beta with a limited number of teams.</p>
+      <a class="btn btn-primary reveal" href="mailto:nicolasoj81@gmail.com?subject=Dygtig%20Access%20Request&body=Hi%2C%20I%27d%20like%20to%20try%20Dygtig.%20A%20bit%20about%20what%20I%27m%20running%3A">Request Access</a>
     </div>
   </section>
 
@@ -507,6 +746,220 @@
     <div class="beta-note">Dygtig is currently in private beta<span class="dot-sep">·</span>limited access</div>
   </div>
 </footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Scroll-reveal ---------- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    revealEls.forEach(function (el) { el.classList.add("in-view"); });
+  } else {
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+    revealEls.forEach(function (el) { revealObserver.observe(el); });
+  }
+
+  /* ---------- Animated counters ---------- */
+  function easeOutQuad(t) { return t * (2 - t); }
+
+  function animateCounter(el) {
+    var target = parseFloat(el.getAttribute("data-target"), 10) || 0;
+    var prefix = el.getAttribute("data-prefix") || "";
+    var suffix = el.getAttribute("data-suffix") || "";
+    var duration = reduceMotion ? 0 : 1400;
+
+    if (duration === 0) {
+      el.textContent = prefix + target.toLocaleString("en-US") + suffix;
+      return;
+    }
+
+    var start = null;
+    function tick(ts) {
+      if (start === null) start = ts;
+      var elapsed = ts - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = easeOutQuad(progress);
+      var current = Math.round(target * eased);
+      el.textContent = prefix + current.toLocaleString("en-US") + suffix;
+      if (progress < 1) {
+        window.requestAnimationFrame(tick);
+      } else {
+        el.textContent = prefix + target.toLocaleString("en-US") + suffix;
+      }
+    }
+    window.requestAnimationFrame(tick);
+  }
+
+  var counters = document.querySelectorAll(".counter");
+  if (!("IntersectionObserver" in window)) {
+    counters.forEach(animateCounter);
+  } else {
+    var counterObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(function (el) { counterObserver.observe(el); });
+  }
+
+  /* ---------- Live demo chart ---------- */
+  var chartData = [
+    { day: "Day 1",  value: 14 },
+    { day: "Day 2",  value: 19 },
+    { day: "Day 3",  value: 11 },
+    { day: "Day 4",  value: 26 },
+    { day: "Day 5",  value: 33 },
+    { day: "Day 6",  value: 8  },
+    { day: "Day 7",  value: 6  },
+    { day: "Day 8",  value: 21 },
+    { day: "Day 9",  value: 29 },
+    { day: "Day 10", value: 24 },
+    { day: "Day 11", value: 37 },
+    { day: "Day 12", value: 50, lockout: true },
+    { day: "Day 13", value: 18 },
+    { day: "Day 14", value: 9  },
+    { day: "Day 15", value: 23 },
+    { day: "Day 16", value: 31 },
+    { day: "Day 17", value: 18 },
+    { day: "Day 18", value: 27 },
+    { day: "Day 19", value: 35 },
+    { day: "Day 20", value: 12 },
+    { day: "Day 21", value: 15 }
+  ];
+  var DAILY_CAP = 50;
+
+  var svg = document.getElementById("chart-svg");
+  var staticG = document.getElementById("chart-static");
+  var guideV = document.getElementById("chart-guide-v");
+  var hoverDot = document.getElementById("chart-hover-dot");
+  var hitArea = document.getElementById("chart-hit-area");
+  var tooltip = document.getElementById("chart-tooltip");
+  var chartWrap = document.getElementById("chart-wrap");
+  var ttDate = document.getElementById("tt-date");
+  var ttValue = document.getElementById("tt-value");
+  var ttFlag = document.getElementById("tt-flag");
+
+  var PAD = { top: 20, right: 14, bottom: 24, left: 14 };
+  var W = 720, H = 260;
+  var plotW = W - PAD.left - PAD.right;
+  var plotH = H - PAD.top - PAD.bottom;
+  var yMax = 60;
+
+  function xFor(i) { return PAD.left + (i / (chartData.length - 1)) * plotW; }
+  function yFor(v) { return PAD.top + (1 - v / yMax) * plotH; }
+
+  function buildChart() {
+    var points = chartData.map(function (d, i) { return xFor(i) + "," + yFor(d.value); });
+    var linePath = "M" + points.join(" L");
+    var areaPath = linePath + " L" + xFor(chartData.length - 1) + "," + (PAD.top + plotH) +
+      " L" + xFor(0) + "," + (PAD.top + plotH) + " Z";
+
+    var lockoutIndex = chartData.findIndex(function (d) { return d.lockout; });
+    var capY = yFor(DAILY_CAP);
+
+    var svgns = "http://www.w3.org/2000/svg";
+    function el(tag, attrs) {
+      var n = document.createElementNS(svgns, tag);
+      for (var k in attrs) { n.setAttribute(k, attrs[k]); }
+      return n;
+    }
+
+    staticG.innerHTML = "";
+
+    staticG.appendChild(el("path", { d: areaPath, class: "chart-area" }));
+
+    staticG.appendChild(el("line", {
+      class: "chart-cap-line", x1: PAD.left, y1: capY, x2: PAD.left + plotW, y2: capY
+    }));
+    var capLabel = el("text", { class: "chart-cap-label", x: PAD.left + plotW - 4, y: capY - 6, "text-anchor": "end" });
+    capLabel.textContent = "Daily cap · $" + DAILY_CAP;
+    staticG.appendChild(capLabel);
+
+    staticG.appendChild(el("path", { d: linePath, class: "chart-line" }));
+
+    if (lockoutIndex > -1) {
+      var lx = xFor(lockoutIndex), ly = yFor(chartData[lockoutIndex].value);
+      staticG.appendChild(el("line", {
+        class: "chart-lockout-line", x1: lx, y1: PAD.top, x2: lx, y2: PAD.top + plotH
+      }));
+      staticG.appendChild(el("circle", { class: "chart-lockout-dot", cx: lx, cy: ly, r: 5 }));
+      var lockLabel = el("text", {
+        class: "chart-lockout-label", x: lx, y: PAD.top - 6, "text-anchor": (lockoutIndex > chartData.length - 5 ? "end" : "middle")
+      });
+      lockLabel.textContent = "Locked out at cap";
+      staticG.appendChild(lockLabel);
+    }
+
+    [0, Math.floor((chartData.length - 1) / 2), chartData.length - 1].forEach(function (i) {
+      var lbl = el("text", {
+        class: "chart-axis-label", x: xFor(i), y: H - 4,
+        "text-anchor": i === 0 ? "start" : (i === chartData.length - 1 ? "end" : "middle")
+      });
+      lbl.textContent = chartData[i].day;
+      staticG.appendChild(lbl);
+    });
+
+    guideV.setAttribute("y1", PAD.top);
+    guideV.setAttribute("y2", PAD.top + plotH);
+  }
+
+  function showTooltip(clientX) {
+    var rect = svg.getBoundingClientRect();
+    var relX = clientX - rect.left;
+    var svgX = (relX / rect.width) * W;
+
+    var idx = Math.round(((svgX - PAD.left) / plotW) * (chartData.length - 1));
+    idx = Math.max(0, Math.min(chartData.length - 1, idx));
+
+    var d = chartData[idx];
+    var px = xFor(idx), py = yFor(d.value);
+
+    guideV.setAttribute("x1", px);
+    guideV.setAttribute("x2", px);
+    guideV.style.opacity = 1;
+    hoverDot.setAttribute("cx", px);
+    hoverDot.setAttribute("cy", py);
+    hoverDot.style.opacity = 1;
+
+    ttDate.textContent = d.day;
+    ttValue.textContent = "$" + d.value.toFixed(2);
+    ttFlag.style.display = d.lockout ? "block" : "none";
+
+    var wrapRect = chartWrap.getBoundingClientRect();
+    var pxPixel = (px / W) * wrapRect.width;
+    var pyPixel = (py / H) * wrapRect.height;
+    tooltip.style.left = pxPixel + "px";
+    tooltip.style.top = pyPixel + "px";
+    tooltip.style.opacity = 1;
+  }
+
+  function hideTooltip() {
+    guideV.style.opacity = 0;
+    hoverDot.style.opacity = 0;
+    tooltip.style.opacity = 0;
+  }
+
+  buildChart();
+  window.addEventListener("resize", buildChart);
+
+  hitArea.addEventListener("pointermove", function (e) { showTooltip(e.clientX); });
+  hitArea.addEventListener("pointerdown", function (e) { showTooltip(e.clientX); });
+  hitArea.addEventListener("pointerleave", hideTooltip);
+})();
+</script>
 
 </body>
 </html>
