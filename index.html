@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dygtig — Stop AI agents from burning your budget</title>
-<meta name="description" content="Dygtig sits between your agents and Claude or OpenAI, meters every dollar in real time, and locks an agent out the moment it hits its limit.">
+<meta name="description" content="Hosted spend control for AI agents. Sign up, point your agent's base URL at Dygtig, and it meters every dollar and locks an agent out at its limit. No install required.">
 <link rel="icon" type="image/x-icon" href="branding/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="branding/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="branding/favicon-16.png">
@@ -183,6 +183,16 @@
     margin: 0 auto 40px;
   }
   .sub strong { color: var(--text); font-weight: 600; }
+  .sub.sub-lead { margin-bottom: 14px; }
+  .sub.sub-how { font-size: 16px; margin-bottom: 40px; }
+  .side-note {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 18px auto 0;
+    text-align: center;
+  }
+  .side-note.after-steps { margin-top: 32px; }
 
   .hero-stat {
     margin: 0 auto 38px;
@@ -606,7 +616,8 @@
       <span class="eyebrow"><span class="pulse"></span>Private beta</span>
       <div class="tagline-badge">Dygtig — Danish for <em>clever</em>. Built to be smarter than your agent's next runaway loop.</div>
       <h1>Stop AI agents from burning your budget</h1>
-      <p class="sub">Dygtig sits between your agents and <strong>Claude or OpenAI</strong>, meters every dollar in real time, and locks an agent out the moment it hits its limit — before the money's gone, not after.</p>
+      <p class="sub sub-lead">Dygtig is a hosted proxy that sits between your agents and <strong>Claude or OpenAI</strong>, meters every dollar in real time, and locks an agent out the moment it hits its limit — before the money's gone, not after.</p>
+      <p class="sub sub-how">Sign up, get a URL and login, point your agent's base URL at it. <strong>No install required.</strong></p>
       <div class="hero-stat">
         <div class="hero-stat-number"><span class="counter" data-target="87000" data-prefix="$" data-suffix=" bill">0</span></div>
         <p class="hero-stat-caption">A 35-engineer company got hit — with no way to trace which agent caused it.</p>
@@ -648,20 +659,21 @@
       <div class="steps">
         <div class="step reveal">
           <div class="step-num">1</div>
-          <h3>Your agent calls out as normal</h3>
-          <p>Your agent calls Claude or OpenAI exactly the way it already does — no code changes to how it prompts or parses responses.</p>
+          <h3>Sign up, get your URL and login</h3>
+          <p>Request access and you get your own hosted Dygtig instance: a URL for your agents and a login for your dashboard. Nothing to install or run.</p>
         </div>
         <div class="step reveal">
           <div class="step-num">2</div>
-          <h3>Dygtig meters and checks</h3>
-          <p>Dygtig sits in the request path, meters the call, and checks it against the agent's budget before it's allowed through.</p>
+          <h3>Point your agent's base URL at it</h3>
+          <p>Swap your agent's base URL for yours and add two headers: a token and an agent name. Same Claude or OpenAI models, your own API key, no other code changes.</p>
         </div>
         <div class="step blocked reveal">
           <div class="step-num">3</div>
           <h3>Under budget goes through. Over budget doesn't.</h3>
-          <p>Under budget: the request goes through untouched. Over budget: it's blocked — before any money is spent.</p>
+          <p>Dygtig sits in the request path and meters every call against the agent's budget. Under budget: it goes through untouched. Over budget: it's blocked, before any money is spent.</p>
         </div>
       </div>
+      <p class="side-note after-steps reveal">Want it on your own machine instead? Dygtig can also be self-hosted, so your traffic never leaves your infrastructure.</p>
     </div>
   </section>
 
@@ -702,8 +714,8 @@
         </div>
         <div class="feature reveal">
           <div class="feature-icon">⌂</div>
-          <h3>Runs on your own infrastructure</h3>
-          <p>Self-hosted by design — your traffic never leaves your machine.</p>
+          <h3>Hosted for you, or self-hosted</h3>
+          <p>Use your own hosted instance with no install, or run Dygtig on your own machine if you'd rather keep everything in-house.</p>
         </div>
         <div class="feature reveal">
           <div class="feature-icon">✉</div>
@@ -757,10 +769,10 @@
     <div class="wrap trust">
       <div class="trust-card reveal">
         <div class="section-label">Trust</div>
-        <p><strong>Your API key stays yours.</strong> Your traffic goes straight to Anthropic or OpenAI, exactly as it would without Dygtig in the middle. Only metadata — tokens, cost, agent name — is ever recorded.</p>
+        <p><strong>Your API key stays yours.</strong> Dygtig forwards your requests to Anthropic or OpenAI unchanged and never stores your key. Only metadata — tokens, cost, agent name — is ever recorded.</p>
         <div class="trust-badges">
-          <span class="trust-badge">Self-hosted</span>
-          <span class="trust-badge">No traffic interception</span>
+          <span class="trust-badge">Self-host option</span>
+          <span class="trust-badge">Key never stored</span>
           <span class="trust-badge">Metadata only</span>
         </div>
       </div>
@@ -770,8 +782,9 @@
   <section class="final-cta">
     <div class="wrap">
       <h2 class="reveal">Know before it happens, not after</h2>
-      <p class="section-desc reveal">Currently in private beta with a limited number of teams.</p>
+      <p class="section-desc reveal">Get your own hosted Dygtig: a URL, a login, and nothing to install. Currently in private beta with a limited number of teams.</p>
       <a class="btn btn-primary reveal" href="mailto:nicolasoj81@gmail.com?subject=Dygtig%20Access%20Request&body=Hi%2C%20I%27d%20like%20to%20try%20Dygtig.%20A%20bit%20about%20what%20I%27m%20running%3A">Request Access</a>
+      <p class="side-note reveal">Prefer to self-host? A self-hosted version is available on request.</p>
     </div>
   </section>
 
