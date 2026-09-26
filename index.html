@@ -769,10 +769,10 @@
     <div class="wrap trust">
       <div class="trust-card reveal">
         <div class="section-label">Trust</div>
-        <p><strong>Your API key stays yours.</strong> Dygtig forwards your requests to Anthropic or OpenAI unchanged and never stores your key. Only metadata — tokens, cost, agent name — is ever recorded.</p>
+        <p><strong>Your API key stays yours.</strong> Dygtig forwards your requests to Anthropic or OpenAI unchanged. Your key passes through in memory for that one request and is never written to disk, logged, or stored. Only metadata — tokens, cost, agent name — is ever recorded.</p>
         <div class="trust-badges">
           <span class="trust-badge">Self-host option</span>
-          <span class="trust-badge">Key never stored</span>
+          <span class="trust-badge">Key passed through, never persisted</span>
           <span class="trust-badge">Metadata only</span>
         </div>
       </div>
